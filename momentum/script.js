@@ -17,7 +17,7 @@ const time = document.querySelector ('.time'),
         time.innerHTML = `${hour} <span>:</span> ${addZero(min)} <span>:</span> ${addZero(sec)}`;
         setTimeout(showTime, 1000);
     }
-////////
+//////////
 function addZero (n) {
     return ((parseInt(n) < 10) ? '0' : '') + n;
 }

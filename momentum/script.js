@@ -1,113 +1,136 @@
-// DOM Elements
-const time = document.querySelector('.time'),
-  greeting = document.querySelector('.greeting'),
-  name = document.querySelector('.name'),
-  focus = document.querySelector('.focus');
+const time = document.querySelector ('.time'),
+     greeting = document.querySelector('.greeting'),
+     name = document.querySelector('.name'),
+     focus = document.querySelector('.focus'),
+     curDate = document.querySelector('.date'),
+         
+     weatherIcon = document.querySelector('.weather-icon'),
+    temperature = document.querySelector('.temperature'),
+    weatherDescription = document.querySelector('.weather-description'),
+    city = document.querySelector('.city');
 
-// Options
-const showAmPm = true;
-
-// Show Time
-function showTime() {
-  let today = new Date(),
-    hour = today.getHours(),
-    min = today.getMinutes(),
-    sec = today.getSeconds();
-
-  // Set AM or PM
-  const amPm = hour >= 12 ? 'PM' : 'AM';
-
-  // 12hr Format
-  hour = hour % 12 || 12;
-
-  // Output Time
-  time.innerHTML = `${hour}<span>:</span>${addZero(min)}<span>:</span>${addZero(
-    sec
-  )} ${showAmPm ? amPm : ''}`;
-
-  setTimeout(showTime, 1000);
+    function showTime () {
+       let today = new Date(),
+        hour = today.getHours(),
+        min = today.getMinutes(),     
+        sec = today.getSeconds();
+        time.innerHTML = `${hour} <span>:</span> ${addZero(min)} <span>:</span> ${addZero(sec)}`;
+        setTimeout(showTime, 1000);
+    }
+////////
+function addZero (n) {
+    return ((parseInt(n) < 10) ? '0' : '') + n;
 }
 
-// Add Zeros
-function addZero(n) {
-  return (parseInt(n, 10) < 10 ? '0' : '') + n;
-}
-
-// Set Background and Greeting
-function setBgGreet() {
-  let today = new Date(),
+function setBgGreeting () {
+    let today = new Date(),
     hour = today.getHours();
-
-  if (hour < 12) {
-    // Morning
-    document.body.style.backgroundImage =
-      "url('https://i.ibb.co/7vDLJFb/morning.jpg')";
-    greeting.textContent = 'Good Morning, ';
-  } else if (hour < 18) {
-    // Afternoon
-    document.body.style.backgroundImage =
-      "url('https://i.ibb.co/3mThcXc/afternoon.jpg')";
-    greeting.textContent = 'Good Afternoon, ';
-  } else {
-    // Evening
-    document.body.style.backgroundImage =
-      "url('https://i.ibb.co/924T2Wv/night.jpg')";
-    greeting.textContent = 'Good Evening, ';
-    document.body.style.color = 'white';
-  }
+    if ((hour > 6) && (hour < 12) ) {
+    document.body.style.backgroundImage = "url('/assets/images/morning/01.jpg')";
+    greeting.textContent = "Good morning";
+    } else if ((hour >= 12) && (hour < 18) ) {
+    document.body.style.backgroundImage = "url('/assets/images/day/01.jpg')";
+    greeting.textContent = "Good day";
+    } else if ((hour >= 18) && (hour < 24) ) {
+    document.body.style.backgroundImage = "url('/assets/images/evening/01.jpg')";
+    greeting.textContent = "Good evening";
+    document.body.style.color = "white";
+    } else {
+        document.body.style.backgroundImage = "url('/assets/images/night/01.jpg')";
+        greeting.textContent = "Good night";
+        document.body.style.color = "white";
+        }
 }
 
-// Get Name
 function getName() {
-  if (localStorage.getItem('name') === null) {
-    name.textContent = '[Enter Name]';
-  } else {
-    name.textContent = localStorage.getItem('name');
-  }
-}
-
-// Set Name
-function setName(e) {
-  if (e.type === 'keypress') {
-    // Make sure enter is pressed
-    if (e.which == 13 || e.keyCode == 13) {
-      localStorage.setItem('name', e.target.innerText);
-      name.blur();
+    if (localStorage.getItem('name') === null) {
+        name.textContent = '[Enter Name]';
+    } else {
+        name.textContent = localStorage.getItem('name');
     }
-  } else {
-    localStorage.setItem('name', e.target.innerText);
-  }
 }
 
-// Get Focus
 function getFocus() {
-  if (localStorage.getItem('focus') === null) {
-    focus.textContent = '[Enter Focus]';
-  } else {
-    focus.textContent = localStorage.getItem('focus');
-  }
-}
-
-// Set Focus
-function setFocus(e) {
-  if (e.type === 'keypress') {
-    // Make sure enter is pressed
-    if (e.which == 13 || e.keyCode == 13) {
-      localStorage.setItem('focus', e.target.innerText);
-      focus.blur();
+    if (localStorage.getItem('focus') === null) {
+        focus.textContent = '[Enter Your Focus]';
+    } else {
+        focus.textContent = localStorage.getItem('focus');
     }
-  } else {
-    localStorage.setItem('focus', e.target.innerText);
-  }
 }
 
-name.addEventListener('keypress', setName);
-name.addEventListener('blur', setName);
-focus.addEventListener('keypress', setFocus);
-focus.addEventListener('blur', setFocus);
+function setName(e) {
+    //подумать короче
+    if (e.type === 'keypress') {
+        if (e.keyCode === 13) {
+        (e.target.innerHTML === '') ? name.textContent = localStorage.getItem('name') : localStorage.setItem('name', e.target.innerHTML); 
+        name.blur();
+        }
+    } else {
+        (e.target.innerHTML === '') ? name.textContent = localStorage.getItem('name') : localStorage.setItem('name', e.target.innerHTML); 
+    }
+}
 
-// Run
+function setFocus(e) {
+    //подумать короче
+    if (e.type === 'keypress') {
+        if (e.keyCode === 13) {
+        (e.target.innerHTML === '') ? focus.textContent = localStorage.getItem('focus') : localStorage.setItem('focus', e.target.innerHTML); 
+        focus.blur();
+        }
+    } else {
+        (e.target.innerHTML === '') ? focus.textContent = localStorage.getItem('focus') : localStorage.setItem('focus', e.target.innerHTML); 
+    }
+}
+function clearElement(e) {
+    //console.log(name.focus); обнуляет если клик когда уже вводишь имя
+    e.target.textContent = '';
+  };
+
+name.addEventListener('blur', setName);
+name.addEventListener('keypress', setName);
+name.addEventListener ('click', clearElement);
+focus.addEventListener ('click', clearElement);
+focus.addEventListener('blur', setFocus);
+focus.addEventListener('keypress', setFocus);
+
+
+function showWeekDay() {
+    const weekDays = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'],
+    arrMonths = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября',
+     'октября', 'ноября', 'декабря'];
+    let today = new Date(),
+    weekDay = today.getDay(),
+    monthDay = today.getDate(),
+    month = today.getMonth();
+    curDate.innerHTML = `${weekDays[weekDay]}, ${monthDay} ${arrMonths[month]}`;
+}
+
+// Weather
+async function getWeather() {  
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city.textContent}&lang=ru&appid=4c0709a010c2f4fecc65e153e45969b5&units=metric`;
+    const res = await fetch(url);
+    const data = await res.json(); 
+    weatherIcon.className = 'weather-icon owf';
+    weatherIcon.classList.add(`owf-${data.weather[0].id}`);
+    temperature.textContent = `${data.main.temp}°C`;
+    weatherDescription.textContent = data.weather[0].description;
+}
+function setCity(event) {
+    if (event.code === 'Enter') {
+      getWeather();
+      city.blur();
+    }
+  } 
+
+document.addEventListener('DOMContentLoaded', getWeather);
+city.addEventListener('keypress', setCity);
+
+getWeather();
+
+
 showTime();
-setBgGreet();
+showWeekDay();
+showWeekDay();
+setBgGreeting();
 getName();
 getFocus();
